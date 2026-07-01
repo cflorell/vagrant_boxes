@@ -1,0 +1,8 @@
+build/
+packer_cache/
+crash.log
+packer.log
+vagrant.pub
+*.pkrvars.hcl
+*.box
+
