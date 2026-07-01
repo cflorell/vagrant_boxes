@@ -13,16 +13,18 @@ packer {
 
 variable "iso_url" {
   type        = string
-  description = "EndeavourOS ISO URL. Override this with the current release ISO."
+  description = "Arch Linux ISO URL."
+  default     = "https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso"
 }
 
 variable "iso_checksum" {
   type        = string
-  description = "EndeavourOS ISO checksum, for example sha256:<checksum>."
+  description = "Arch Linux ISO checksum or checksum file URL."
+  default     = "file:https://geo.mirror.pkgbuild.com/iso/latest/sha256sums.txt"
 }
 
-source "qemu" "endeavouros" {
-  vm_name          = "endeavouros"
+source "qemu" "archlinux" {
+  vm_name          = "archlinux"
   qemu_binary      = "qemu-system-x86_64"
   machine_type     = "q35"
   iso_url          = var.iso_url
@@ -49,7 +51,7 @@ source "qemu" "endeavouros" {
   boot_command = [
     "e<wait>",
     "<down><down><end><wait>",
-    " cow_spacesize=2G script=http://{{ .HTTPIP }}:{{ .HTTPPort }}/endeavouros-install.sh",
+    " cow_spacesize=2G script=http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux-install.sh",
     "<wait><f10>"
   ]
   qemuargs = [
@@ -59,11 +61,11 @@ source "qemu" "endeavouros" {
 }
 
 build {
-  name = "EndeavourOS"
+  name = "ArchLinux"
 
-  sources = ["source.qemu.endeavouros"]
+  sources = ["source.qemu.archlinux"]
 
   post-processor "vagrant" {
-    output = "endeavouros.vagrant.box"
+    output = "archlinux.vagrant.box"
   }
 }
