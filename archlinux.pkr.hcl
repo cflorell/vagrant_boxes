@@ -23,6 +23,12 @@ variable "iso_checksum" {
   default     = "file:https://geo.mirror.pkgbuild.com/iso/latest/sha256sums.txt"
 }
 
+variable "qemu_accelerator" {
+  type        = string
+  description = "QEMU accelerator. Use kvm only when nested virtualization is available and stable on the runner."
+  default     = "kvm"
+}
+
 source "qemu" "archlinux" {
   vm_name          = "archlinux"
   qemu_binary      = "qemu-system-x86_64"
@@ -36,26 +42,20 @@ source "qemu" "archlinux" {
   format           = "qcow2"
   disk_size        = 24576
   output_directory = "build"
-  accelerator      = "kvm"
-  headless         = false
+  accelerator      = var.qemu_accelerator
+  headless         = true
   http_directory   = "http"
   ssh_password     = "vagrant"
   ssh_username     = "vagrant"
-  ssh_timeout      = "60m"
+  ssh_timeout      = "120m"
   ssh_host         = "127.0.0.1"
-  ssh_port         = 2222
-  host_port_min    = 2222
-  host_port_max    = 2222
-  shutdown_command = "echo 'vagrant' | sudo -S shutdown -P now"
+  shutdown_command = "echo 'vagrant' | sudo -S /usr/bin/systemctl poweroff"
+  shutdown_timeout = "5m"
   boot_wait        = "1s"
   boot_command = [
     "<enter><wait10><wait10><wait10>",
     "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux-install.sh<enter>",
     "/usr/bin/bash ./archlinux-install.sh<enter>"
-  ]
-  qemuargs = [
-    ["-netdev", "user,id=net0,hostfwd=tcp::2222-:22"],
-    ["-device", "virtio-net-pci,netdev=net0"]
   ]
 }
 
