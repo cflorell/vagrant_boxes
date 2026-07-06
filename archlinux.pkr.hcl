@@ -47,7 +47,7 @@ source "qemu" "archlinux" {
   host_port_min    = 2222
   host_port_max    = 2222
   shutdown_command = "echo 'vagrant' | sudo -S shutdown -P now"
-  boot_wait        = "10s"
+  boot_wait        = "1s"
   boot_command = [
     "<enter><wait10><wait10><wait10>",
     "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux-install.sh<enter>",
@@ -65,6 +65,6 @@ build {
   sources = ["source.qemu.archlinux"]
 
   post-processor "vagrant" {
-    output = "archlinux.vagrant.box"
+    output = "artifacts/archlinux.vagrant.box"
   }
 }

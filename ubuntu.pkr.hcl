@@ -11,14 +11,19 @@ packer {
   }
 }
 
+variable "version" {
+  type    = string
+  default = "26.04"
+}
+
 source "qemu" "qcow2" {
   qemuargs = [
   ["-netdev", "user,id=net0,hostfwd=tcp::2222-:22"],
   ["-device", "virtio-net-pci,netdev=net0"]
 ]
-  vm_name              = "ubuntu-2404-amd64"
-  iso_url              = "https://releases.ubuntu.com/noble/ubuntu-24.04.4-live-server-amd64.iso"
-  iso_checksum         = "e907d92eeec9df64163a7e454cbc8d7755e8ddc7ed42f99dbc80c40f1a138433"
+  vm_name              = "ubuntu-2604-amd64"
+  iso_url              = "https://releases.ubuntu.com/${var.version}/ubuntu-${var.version}-live-server-amd64.iso"
+  iso_checksum         = "dec49008a71f6098d0bcfc822021f4d042d5f2db279e4d75bdd981304f1ca5d9"
   memory               = 2048
   disk_image           = false
   output_directory     = "build"
@@ -36,12 +41,12 @@ source "qemu" "qcow2" {
   ssh_timeout          = "30m"
   ssh_host             = "127.0.0.1"
   ssh_port             = 2222
-  host_port_min    = 2222
-  host_port_max    = 2222
+  host_port_min        = 2222
+  host_port_max        = 2222
 }
 
 build {
-  name    = "iso"
+  name = "Ubuntu${var.version}"
   sources = ["source.qemu.qcow2"]
 
   provisioner "file" {
@@ -61,7 +66,7 @@ build {
 
   post-processors {
     post-processor "vagrant" {
-      output = "ubuntu2404.vagrant.box"
+      output = "artifacts/ubuntu${var.version}.vagrant.box"
     }
   }
 }

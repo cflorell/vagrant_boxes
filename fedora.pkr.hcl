@@ -21,7 +21,7 @@ variable "iso" {
 }
 
 source "qemu" "fedora" {
-  vm_name          = "fedora43"
+  vm_name          = "fedora${var.version}"
   qemu_binary      = "qemu-system-x86_64"
   machine_type     = "q35"
   iso_url          = "https://download.fedoraproject.org/pub/fedora/linux/releases/${var.version}/Server/x86_64/iso/${var.iso}"
@@ -64,6 +64,6 @@ build {
   sources = ["source.qemu.fedora"]
 
   post-processor "vagrant" {
-    output = "fedora${var.version}.vagrant.box"
+    output = "artifacts/fedora${var.version}.vagrant.box"
 }
 }

@@ -1,5 +1,5 @@
 #!/bin/bash -ex
 
-BOX_NAME="fedora44"
-BOX_FILE="fedora44.vagrant.box"
+export BOX_NAME="fedora"
+export BOX_FILE="fedora44.vagrant.box"
 ./build.sh
