@@ -37,7 +37,7 @@ source "qemu" "fedora" {
   net_device       = "virtio-net"
   disk_interface   = "virtio"
   format           = "qcow2"
-  disk_size        = 24576
+  disk_size        = 51200
   output_directory = "build"
   accelerator      = var.qemu_accelerator
   headless         = true

@@ -12,6 +12,10 @@ if [ ! -f "$template_file" ]; then
     exit 1
 fi
 
+# Use a directory on the main filesystem instead of /tmp (which may be limited)
+export TMPDIR="$(pwd)/build-tmp"
+mkdir -p "$TMPDIR"
+
 curl -fsSL https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub -o vagrant.pub
 packer init "$template_file"
 PACKER_LOG=1 PACKER_LOG_PATH="packer.log" packer build "$BOX_NAME".pkr.hcl
