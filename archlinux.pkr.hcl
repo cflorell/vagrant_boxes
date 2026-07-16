@@ -36,7 +36,7 @@ source "qemu" "archlinux" {
   format           = "qcow2"
   disk_size        = 51200
   output_directory = "build"
-  accelerator      = var.qemu_accelerator
+  accelerator      = "kvm"
   headless         = true
   http_directory   = "http"
   ssh_password     = "vagrant"
