@@ -34,7 +34,7 @@ build_ubuntu:
 trigger_ansible_nodes_archlinux:
   stage: trigger
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
   needs:
     - build_archlinux
   trigger:
@@ -48,7 +48,7 @@ trigger_ansible_nodes_archlinux:
 trigger_ansible_nodes_fedora:
   stage: trigger
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
   needs:
     - build_fedora
   trigger:
@@ -62,7 +62,7 @@ trigger_ansible_nodes_fedora:
 trigger_ansible_nodes_ubuntu:
   stage: trigger
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
   needs:
     - build_ubuntu
   trigger:
