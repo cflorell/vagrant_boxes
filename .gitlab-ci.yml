@@ -1,6 +1,5 @@
 stages:
   - build
-  - trigger
 
 .build_vagrant_box:
   stage: build
@@ -30,45 +29,3 @@ build_ubuntu:
   script:
     - source ./build_ubuntu.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
-
-trigger_ansible_nodes_archlinux:
-  stage: trigger
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
-  needs:
-    - build_archlinux
-  trigger:
-    project: cf_homelab/ansible_nodes
-    branch: main
-    strategy: depend
-  variables:
-    FETCH_VAGRANT_BOXES: "true"
-    BOX: "archlinux"
-
-trigger_ansible_nodes_fedora:
-  stage: trigger
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
-  needs:
-    - build_fedora
-  trigger:
-    project: cf_homelab/ansible_nodes
-    branch: main
-    strategy: depend
-  variables:
-    FETCH_VAGRANT_BOXES: "true"
-    BOX: "fedora44"
-
-trigger_ansible_nodes_ubuntu:
-  stage: trigger
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"
-  needs:
-    - build_ubuntu
-  trigger:
-    project: cf_homelab/ansible_nodes
-    branch: main
-    strategy: depend
-  variables:
-    FETCH_VAGRANT_BOXES: "true"
-    BOX: "ubuntu26.04"

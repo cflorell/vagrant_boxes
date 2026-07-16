@@ -24,3 +24,5 @@ cp "$box_path" "$storage_path.tmp"
 mv "$storage_path.tmp" "$storage_path"
 
 echo "Box '$BOX_NAME' published to '$storage_path'."
+
+vagrant box add "$BOX_NAME" ./artifacts/"$BOX_NAME".vagrant.box
