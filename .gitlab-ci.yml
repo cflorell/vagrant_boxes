@@ -2,16 +2,6 @@ stages:
   - build
   - trigger
 
-variables:
-  BOX_TO_BUILD:
-    value: "all"
-    description: "Select which vagrant box to build (all, archlinux, fedora, or ubuntu)"
-    options:
-      - "all"
-      - "archlinux"
-      - "fedora"
-      - "ubuntu"
-
 .build_vagrant_box:
   stage: build
   interruptible: true
@@ -19,30 +9,24 @@ variables:
   tags:
     - ansible
   resource_group: vagrant-box-builder
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
 
 build_archlinux:
   extends: .build_vagrant_box
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web" && ($BOX_TO_BUILD == "all" || $BOX_TO_BUILD == "archlinux")
   script:
     - source ./build_archlinux.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_fedora:
   extends: .build_vagrant_box
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web" && ($BOX_TO_BUILD == "all" || $BOX_TO_BUILD == "fedora")
   script:
     - source ./build_fedora.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_ubuntu:
   extends: .build_vagrant_box
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web" && ($BOX_TO_BUILD == "all" || $BOX_TO_BUILD == "ubuntu")
   script:
     - source ./build_ubuntu.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
