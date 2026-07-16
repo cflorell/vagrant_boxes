@@ -25,4 +25,4 @@ mv "$storage_path.tmp" "$storage_path"
 
 echo "Box '$BOX_NAME' published to '$storage_path'."
 
-vagrant box add "$BOX_NAME" ./artifacts/"$BOX_NAME".vagrant.box --force
+vagrant box add "$BOX_NAME" ./artifacts/"$BOX_FILE" --force
