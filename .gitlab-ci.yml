@@ -38,7 +38,7 @@ trigger_ansible_nodes_archlinux:
   needs:
     - build_archlinux
   trigger:
-    project: homelab/ansible_nodes
+    project: cf_homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
@@ -52,7 +52,7 @@ trigger_ansible_nodes_fedora:
   needs:
     - build_fedora
   trigger:
-    project: homelab/ansible_nodes
+    project: cf_homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
@@ -66,7 +66,7 @@ trigger_ansible_nodes_ubuntu:
   needs:
     - build_ubuntu
   trigger:
-    project: homelab/ansible_nodes
+    project: cf_homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
