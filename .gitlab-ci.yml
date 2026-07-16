@@ -16,28 +16,54 @@ stages:
 build_archlinux:
   extends: .build_vagrant_box
   script:
-    - ./build_archlinux.sh
+    - source /build_archlinux.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_fedora:
   extends: .build_vagrant_box
   script:
-    - ./build_fedora.sh
+    - source /build_fedora.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_ubuntu:
   extends: .build_vagrant_box
   script:
-    - ./build_ubuntu.sh
+    - source /build_ubuntu.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
-trigger_ansible_nodes_box_fetch:
+trigger_ansible_nodes_archlinux:
   stage: trigger
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
   needs:
     - build_archlinux
+  trigger:
+    project: cf_homelab/ansible_nodes
+    branch: main
+    strategy: depend
+  variables:
+    FETCH_VAGRANT_BOXES: "true"
+    BOX: "archlinux"
+
+trigger_ansible_nodes_fedora:
+  stage: trigger
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
     - build_fedora
+  trigger:
+    project: cf_homelab/ansible_nodes
+    branch: main
+    strategy: depend
+  variables:
+    FETCH_VAGRANT_BOXES: "true"
+    BOX: "fedora44"
+
+trigger_ansible_nodes_ubuntu:
+  stage: trigger
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
     - build_ubuntu
   trigger:
     project: cf_homelab/ansible_nodes
@@ -45,3 +71,4 @@ trigger_ansible_nodes_box_fetch:
     strategy: depend
   variables:
     FETCH_VAGRANT_BOXES: "true"
+    BOX: "ubuntu26.04"
