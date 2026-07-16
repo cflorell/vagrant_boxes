@@ -16,19 +16,19 @@ stages:
 build_archlinux:
   extends: .build_vagrant_box
   script:
-    - source /build_archlinux.sh
+    - source ./build_archlinux.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_fedora:
   extends: .build_vagrant_box
   script:
-    - source /build_fedora.sh
+    - source ./build_fedora.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 build_ubuntu:
   extends: .build_vagrant_box
   script:
-    - source /build_ubuntu.sh
+    - source ./build_ubuntu.sh
     - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
 
 trigger_ansible_nodes_archlinux:
@@ -38,7 +38,7 @@ trigger_ansible_nodes_archlinux:
   needs:
     - build_archlinux
   trigger:
-    project: cf_homelab/ansible_nodes
+    project: homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
@@ -52,7 +52,7 @@ trigger_ansible_nodes_fedora:
   needs:
     - build_fedora
   trigger:
-    project: cf_homelab/ansible_nodes
+    project: homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
@@ -66,7 +66,7 @@ trigger_ansible_nodes_ubuntu:
   needs:
     - build_ubuntu
   trigger:
-    project: cf_homelab/ansible_nodes
+    project: homelab/ansible_nodes
     branch: main
     strategy: depend
   variables:
