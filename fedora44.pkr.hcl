@@ -20,12 +20,6 @@ variable "iso" {
   default = "Fedora-Server-dvd-x86_64-44-1.7.iso"
 }
 
-variable "qemu_accelerator" {
-  type        = string
-  description = "QEMU accelerator. Use kvm only when nested virtualization is available and stable on the runner."
-  default     = "kvm"
-}
-
 source "qemu" "fedora" {
   vm_name          = "fedora${var.version}"
   qemu_binary      = "qemu-system-x86_64"
@@ -39,12 +33,12 @@ source "qemu" "fedora" {
   format           = "qcow2"
   disk_size        = 51200
   output_directory = "build"
-  accelerator      = var.qemu_accelerator
+  accelerator      = "kvm"
   headless         = true
   http_directory   = "http"
   ssh_password     = "vagrant"
   ssh_username     = "vagrant"
-  ssh_timeout      = "120m"
+  ssh_timeout      = "30m"
   ssh_host         = "127.0.0.1"
   shutdown_command = "echo 'vagrant' | sudo -S /usr/bin/systemctl poweroff"
   shutdown_timeout = "5m"

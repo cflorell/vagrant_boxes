@@ -23,12 +23,6 @@ variable "iso_checksum" {
   default     = "file:https://geo.mirror.pkgbuild.com/iso/latest/sha256sums.txt"
 }
 
-variable "qemu_accelerator" {
-  type        = string
-  description = "QEMU accelerator. Use kvm only when nested virtualization is available and stable on the runner."
-  default     = "kvm"
-}
-
 source "qemu" "archlinux" {
   vm_name          = "archlinux"
   qemu_binary      = "qemu-system-x86_64"
@@ -47,7 +41,7 @@ source "qemu" "archlinux" {
   http_directory   = "http"
   ssh_password     = "vagrant"
   ssh_username     = "vagrant"
-  ssh_timeout      = "120m"
+  ssh_timeout      = "30m"
   ssh_host         = "127.0.0.1"
   shutdown_command = "echo 'vagrant' | sudo -S /usr/bin/systemctl poweroff"
   shutdown_timeout = "5m"

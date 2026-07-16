@@ -16,12 +16,6 @@ variable "version" {
   default = "26.04"
 }
 
-variable "qemu_accelerator" {
-  type        = string
-  description = "QEMU accelerator. Use kvm only when nested virtualization is available and stable on the runner."
-  default     = "kvm"
-}
-
 source "qemu" "qcow2" {
   vm_name              = "ubuntu-2604-amd64"
   iso_url              = "https://releases.ubuntu.com/${var.version}/ubuntu-${var.version}-live-server-amd64.iso"
@@ -29,7 +23,7 @@ source "qemu" "qcow2" {
   memory               = 2048
   disk_image           = false
   output_directory     = "build"
-  accelerator          = var.qemu_accelerator
+  accelerator          = "kvm"
   headless             = true
   disk_size            = 51200
   disk_interface       = "virtio"
