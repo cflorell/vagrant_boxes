@@ -1,0 +1,47 @@
+stages:
+  - build
+  - trigger
+
+.build_vagrant_box:
+  stage: build
+  interruptible: true
+  timeout: 20 minutes
+  tags:
+    - ansible
+  resource_group: vagrant-box-builder
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+build_archlinux:
+  extends: .build_vagrant_box
+  script:
+    - ./build_archlinux.sh
+    - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
+
+build_fedora:
+  extends: .build_vagrant_box
+  script:
+    - ./build_fedora.sh
+    - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
+
+build_ubuntu:
+  extends: .build_vagrant_box
+  script:
+    - ./build_ubuntu.sh
+    - if [ "$CI_COMMIT_BRANCH" = "main" ]; then ./publish_box.sh; fi
+
+trigger_ansible_nodes_box_fetch:
+  stage: trigger
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
+    - build_archlinux
+    - build_fedora
+    - build_ubuntu
+  trigger:
+    project: cf_homelab/ansible_nodes
+    branch: main
+    strategy: depend
+  variables:
+    FETCH_VAGRANT_BOXES: "true"
