@@ -11,7 +11,7 @@ stages:
   resource_group: vagrant-box-builder
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web"
 
 build_archlinux:
   extends: .build_vagrant_box
