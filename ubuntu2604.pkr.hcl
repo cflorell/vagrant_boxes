@@ -36,7 +36,7 @@ source "qemu" "qcow2" {
   shutdown_timeout     = "5m"
   ssh_username         = "vagrant"
   ssh_password         = "vagrant"
-  ssh_timeout          = "120m"
+  ssh_timeout          = "20m"
   ssh_host             = "127.0.0.1"
 }
 

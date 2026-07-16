@@ -41,7 +41,7 @@ source "qemu" "archlinux" {
   http_directory   = "http"
   ssh_password     = "vagrant"
   ssh_username     = "vagrant"
-  ssh_timeout      = "30m"
+  ssh_timeout      = "20m"
   ssh_host         = "127.0.0.1"
   shutdown_command = "echo 'vagrant' | sudo -S /usr/bin/systemctl poweroff"
   shutdown_timeout = "5m"

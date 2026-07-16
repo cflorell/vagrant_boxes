@@ -5,7 +5,7 @@ stages:
 .build_vagrant_box:
   stage: build
   interruptible: true
-  timeout: 20 minutes
+  timeout: 30 minutes
   tags:
     - ansible
   resource_group: vagrant-box-builder
