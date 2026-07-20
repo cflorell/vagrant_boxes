@@ -12,11 +12,11 @@ pre-authorized, and packaged into a `.box` file Vagrant can add directly.
 
 | Path | Purpose |
 |---|---|
-| `build.sh` | Generic build driver: runs `packer init`/`packer build` for `$BOX_NAME.pkr.hcl` and registers the result with `vagrant box add`. |
+| `build.sh` | Generic build driver: runs `packer init`/`packer build` for `$BOX_NAME.pkr.hcl`, producing the `.box` artifact only (not added to Vagrant's local cache). |
 | `build_archlinux.sh`, `build_fedora.sh`, `build_ubuntu.sh` | Thin wrappers that set `BOX_NAME`/`BOX_FILE` and call `build.sh`. |
 | `archlinux.pkr.hcl`, `fedora44.pkr.hcl`, `ubuntu2604.pkr.hcl` | Packer templates (QEMU builder + `vagrant` post-processor) for each distro. |
 | `http/` | Files served to the VM during boot over Packer's HTTP server: Arch install script, Fedora kickstart (`fedora-ks.cfg`), Ubuntu autoinstall cloud-init (`user-data`/`meta-data`). |
-| `publish_box.sh` | Copies a built box from `artifacts/` to a shared storage directory and re-adds it to the local Vagrant install. |
+| `publish_box.sh` | Copies a built box from `artifacts/` to a shared storage directory, then adds it to the local Vagrant install. |
 | `vagrant.pub` | Vagrant's public key, fetched fresh by `build.sh` and injected into each image's `authorized_keys`. |
 | `artifacts/` | Output directory for built `.box` files (git-ignored). |
 | `build-tmp/`, `build/`, `packer_cache/`, `packer.log` | Packer working/output/log directories (git-ignored). |
@@ -34,9 +34,9 @@ pre-authorized, and packaged into a `.box` file Vagrant can add directly.
 Run one of the per-distro wrappers:
 
 ```bash
-./build_archlinux.sh   # -> artifacts/archlinux.vagrant.box, registered as "archlinux"
-./build_fedora.sh      # -> artifacts/fedora44.vagrant.box, registered as "fedora44"
-./build_ubuntu.sh      # -> artifacts/ubuntu26.04.vagrant.box, registered as "ubuntu2604"
+./build_archlinux.sh   # -> artifacts/archlinux.vagrant.box
+./build_fedora.sh      # -> artifacts/fedora44.vagrant.box
+./build_ubuntu.sh      # -> artifacts/ubuntu26.04.vagrant.box
 ```
 
 Each wrapper just sets `BOX_NAME` and `BOX_FILE` and delegates to `build.sh`,
@@ -49,14 +49,13 @@ BOX_NAME=<template-name-without-.pkr.hcl> ./build.sh
 `build.sh` downloads the current Vagrant insecure public key, boots the ISO
 headless under QEMU, waits for the unattended installer to finish, and
 produces `artifacts/<box>.vagrant.box` via Packer's `vagrant` post-processor.
-The result is then added to the local Vagrant box collection with
-`vagrant box add --force`, so the freshly built box is ready to use
-immediately.
+The box is not added to Vagrant's local cache at this point; use
+`publish_box.sh` to do that.
 
 ## Publishing a box
 
 `publish_box.sh` copies a built artifact to a shared location (default
-`/mnt/Storage3/boxes`, override with `BOX_STORAGE_DIR`) and re-registers it
+`/mnt/Storage3/boxes`, override with `BOX_STORAGE_DIR`) and then registers it
 with Vagrant:
 
 ```bash

@@ -19,6 +19,5 @@ mkdir -p "$TMPDIR"
 curl -fsSL https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub -o vagrant.pub
 packer init "$template_file"
 PACKER_LOG=1 PACKER_LOG_PATH="packer.log" packer build "$BOX_NAME".pkr.hcl
-vagrant box add --name "$BOX_NAME" ./artifacts/"$BOX_FILE" --force
 
-echo "Box '$BOX_NAME' built and re-added to Vagrant."
+echo "Box '$BOX_NAME' built."
