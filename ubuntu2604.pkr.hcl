@@ -25,7 +25,7 @@ source "qemu" "qcow2" {
   output_directory     = "build"
   accelerator          = "kvm"
   headless             = true
-  disk_size            = 51200
+  disk_size            = 76800
   disk_interface       = "virtio"
   format               = "qcow2"
   net_device           = "virtio-net"
